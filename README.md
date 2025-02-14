@@ -9,7 +9,7 @@
 
 🎯 STEP 2
 
-    docker compose up -d
+    docker compose up
 
 <br>
 
