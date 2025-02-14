@@ -13,10 +13,13 @@ services:
                apt-get install -y git curl && \
                curl -s https://packagecloud.io/install/repositories/github/git-lfs/script.deb.sh | bash && \
                apt-get install -y git-lfs && \
+               git config --global --add safe.directory /AI-Bible-Quotation-App && \
                git lfs pull && \
                ./gradlew build --build-cache --no-daemon -x test && \
-               chown -R '1000:1000' build && chown -R '1000:1000' lib && \
+               chown -R '1000:1000' build && \
+               chown -R '1000:1000' lib && \
                java -Djava.library.path=./lib -jar build/libs/*SNAPSHOT.jar"
+
     ports:
       - "${APP_PORT}:${APP_PORT}"
     env_file:
