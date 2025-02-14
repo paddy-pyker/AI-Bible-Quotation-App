@@ -1,5 +1,8 @@
 package com.ai.bible.quotation_app.component
 
+import com.ai.bible.quotation_app.model.Scripture
+import com.ai.bible.quotation_app.service.BibleService
+import com.fasterxml.jackson.databind.ObjectMapper
 import com.k2fsa.sherpa.onnx.OfflineModelConfig
 import com.k2fsa.sherpa.onnx.OfflineRecognizer
 import com.k2fsa.sherpa.onnx.OfflineRecognizerConfig
@@ -16,7 +19,7 @@ import javax.sound.sampled.AudioSystem
 private val log = KotlinLogging.logger {}
 
 @Component
-class TranscribeAudio(private val gemini: Gemini) {
+class TranscribeAudio(private val gemini: Gemini, private val bibleService: BibleService) {
 
     private val recognizer: OfflineRecognizer = createOfflineRecognizer()
     private val sampleRate = 16_000
@@ -38,14 +41,17 @@ class TranscribeAudio(private val gemini: Gemini) {
     private fun parseText(text: String, session: WebSocketSession): String {
         val geminiResponse = gemini.chat(session.id, text)
         if(geminiResponse != null && !geminiResponse.match){
-            return ""
+            return convertToJson(Scripture())
         }
-//        val book = KJVBook()
-//        book.title = "hello"
-//        book.content = "hello world"
-//
-//        kjvBooksRepository.save(book)
-        return geminiResponse?.title as String
+
+        val response = bibleService.getScripture(geminiResponse)
+        response.title = geminiResponse?.title
+        return convertToJson(response)
+    }
+
+    private fun convertToJson(value: Any): String {
+        val mapper = ObjectMapper()
+        return mapper.writeValueAsString(value)
     }
 
     private fun audioInputStreamToFloatArray(audioInputStream: AudioInputStream): FloatArray {
