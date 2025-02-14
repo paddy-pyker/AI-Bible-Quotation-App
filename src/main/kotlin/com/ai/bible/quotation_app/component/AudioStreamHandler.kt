@@ -14,6 +14,7 @@ import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
+import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 import javax.sound.sampled.AudioFormat
 import javax.sound.sampled.AudioInputStream
@@ -41,32 +42,33 @@ class AudioStreamHandler(private val transcribeAudio: TranscribeAudio) : BinaryW
     // If we have a silence longer than this (in milliseconds), we treat it as a break.
     private val silenceDurationThreshold = 800L  // e.g., 0.8 second
 
-    // Executor to process completed segments asynchronously.
-    @Volatile
-    private var processingExecutor = Executors.newScheduledThreadPool(1)
-
+    // Map to store a separate executor for each WebSocket session
+    private val sessionExecutors = mutableMapOf<WebSocketSession, ExecutorService>()
 
 
     override fun afterConnectionEstablished(session: WebSocketSession) {
-        log.info { "WebSocket connection established" }
-        if (processingExecutor.isShutdown || processingExecutor.isTerminated) {
-            processingExecutor = Executors.newScheduledThreadPool(1)
-        }
+        log.info { "WebSocket connection established: ${session.id}" }
+
+        // Create a new executor for this session
+        sessionExecutors[session] = Executors.newScheduledThreadPool(1)
     }
 
     override fun afterConnectionClosed(session: WebSocketSession, status: CloseStatus) {
-        log.info { "WebSocket connection closed" }
-        processingExecutor.shutdownNow()
+        log.info { "WebSocket connection closed: ${session.id}" }
+
+        // Shut down executor only for this session
+        sessionExecutors[session]?.shutdownNow()
+        sessionExecutors.remove(session)
     }
 
     override fun handleBinaryMessage(session: WebSocketSession, message: BinaryMessage) {
-        processAudioMessage(message.payload)
+        processAudioMessage(session, message.payload)
     }
 
     /**
      * Process an incoming ByteBuffer containing 32-bit float PCM samples.
      */
-    fun processAudioMessage(messagePayload: ByteBuffer) {
+    fun processAudioMessage(session: WebSocketSession, messagePayload: ByteBuffer) {
         // Ensure little-endian order.
         messagePayload.order(ByteOrder.LITTLE_ENDIAN)
 
@@ -111,8 +113,9 @@ class AudioStreamHandler(private val transcribeAudio: TranscribeAudio) : BinaryW
             }
 
             // Process the segment asynchronously.
-            if (!processingExecutor.isShutdown) {
-                processingExecutor.submit {
+            val executor = sessionExecutors[session]
+            if (executor != null && !executor.isShutdown) {
+                executor.submit {
                     processSegment(segmentData)
                 }
             }
