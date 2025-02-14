@@ -10,7 +10,7 @@ services:
       - gradle-cache:/root/.gradle
     command: |
       bash -c "./gradlew build --build-cache --no-daemon -x test && \
-               chown -R '1000:1000' build && \
+               chown -R '1000:1000' build && chown -R '1000:1000' lib &&\
                java -Djava.library.path=./lib -jar build/libs/*SNAPSHOT.jar"
     ports:
       - "${APP_PORT}:${APP_PORT}"
