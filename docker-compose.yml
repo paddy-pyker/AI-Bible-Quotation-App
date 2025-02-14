@@ -9,7 +9,7 @@ services:
       - .:/app
       - gradle-cache:/root/.gradle
     command: |
-      bash -c "./gradlew build --build-cache --no-daemon && \
+      bash -c "./gradlew build --build-cache --no-daemon -x test && \
                chown -R '1000:1000' build && \
                java -Djava.library.path=./lib -jar build/libs/*SNAPSHOT.jar"
     ports:

@@ -55,4 +55,8 @@ kotlin {
 
 tasks.withType<Test> {
     useJUnitPlatform()
+    jvmArgs = listOf("-XX:+EnableDynamicAgentLoading")
+    testLogging {
+        events("passed", "skipped", "failed")
+    }
 }
