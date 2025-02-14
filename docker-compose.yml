@@ -1,0 +1,45 @@
+services:
+
+  ai-bible-quotation:
+    image: docker.io/library/eclipse-temurin:21
+    container_name: ai-bible-quotation
+    working_dir: /app
+    restart: always
+    volumes:
+      - .:/app
+      - gradle-cache:/root/.gradle
+    command: |
+      bash -c ./gradlew build --build-cache --no-daemon && \
+               chown -R '1000:1000' build && \
+               java -Djava.library.path=./lib -jar build/libs/*SNAPSHOT.jar"
+    ports:
+      - "${APP_PORT}:${APP_PORT}"
+    env_file:
+      - .env
+    networks:
+      - app
+
+  mongo:
+    image: docker.io/library/mongo:5.0.2
+    container_name: ai-bible-mongo
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGODB_USER}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGODB_PASS}
+    ports:
+      - "${MONGODB_PORT}:${MONGODB_PORT}"
+    volumes:
+      - mongo-data:/data/db
+    env_file:
+      - .env
+    networks:
+      - app
+
+
+volumes:
+  mongo-data:
+  gradle-cache:
+
+networks:
+  app:
+    name: app

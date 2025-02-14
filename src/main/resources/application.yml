@@ -3,13 +3,13 @@ spring:
     name: AI Bible Quotation App
   data:
     mongodb:
-          uri: mongodb://${MONGODB_USER}:${MONGODB_PASS}@${MONGODB_HOST}:${MONGODB_PORT}/${MONGODB_NAME}?authSource=admin
+          uri: mongodb://${MONGODB_USER}:${MONGODB_PASS}@${MONGODB_HOST}:${MONGODB_PORT}/${MONGODB_NAME}?authSource=${MONGODB_AUTH}
 
 server:
-  port: 8443
+  port: ${APP_PORT}
   ssl:
     key-store: classpath:certificate/ai.bible.quotation.p12
-    key-store-password: D00FDOOF
+    key-store-password: ${SSL_PASSWORD}
 
 langchain4j:
   google-ai-gemini:
