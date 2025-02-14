@@ -3,14 +3,13 @@ services:
   ai-bible-quotation:
     image: docker.io/library/eclipse-temurin:21
     container_name: ai-bible-quotation
-    working_dir: /app
+    working_dir: /AI-Bible-Quotation-App
     restart: always
     volumes:
-      - .:/app
+      - .:/AI-Bible-Quotation-App
       - gradle-cache:/root/.gradle
     command: |
-      bash -c "cd /app && \
-                curl -s https://packagecloud.io/install/repositories/github/git-lfs/script.deb.sh | bash && \
+      bash -c " curl -s https://packagecloud.io/install/repositories/github/git-lfs/script.deb.sh | bash && \
                 apt-get install -y git-lfs && \
                 git lfs pull && \
                 ./gradlew build --build-cache --no-daemon -x test && \
