@@ -1,6 +1,10 @@
 spring:
   application:
     name: AI Bible Quotation App
+  data:
+    mongodb:
+          uri: mongodb://${MONGODB_USER}:${MONGODB_PASS}@${MONGODB_HOST}:${MONGODB_PORT}/${MONGODB_NAME}?authSource=admin
+
 server:
   port: 8443
   ssl:
@@ -13,4 +17,5 @@ langchain4j:
       api-key: ${GEMINI_API_KEY}
       model-name: gemini-2.0-flash-lite-preview-02-05
       log-requests-and-responses: true
+
 

@@ -1,6 +1,5 @@
 package com.ai.bible.quotation_app.component
 
-import com.ai.bible.quotation_app.model.LLMResponse
 import com.k2fsa.sherpa.onnx.OfflineModelConfig
 import com.k2fsa.sherpa.onnx.OfflineRecognizer
 import com.k2fsa.sherpa.onnx.OfflineRecognizerConfig
@@ -41,6 +40,11 @@ class TranscribeAudio(private val gemini: Gemini) {
         if(geminiResponse != null && !geminiResponse.match){
             return ""
         }
+//        val book = KJVBook()
+//        book.title = "hello"
+//        book.content = "hello world"
+//
+//        kjvBooksRepository.save(book)
         return geminiResponse?.title as String
     }
 

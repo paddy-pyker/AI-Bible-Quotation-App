@@ -115,9 +115,9 @@ class AudioStreamHandler(private val transcribeAudio: TranscribeAudio) : BinaryW
             // Process the segment asynchronously.
             val executor = sessionExecutors[session]
             if (executor != null && !executor.isShutdown) {
-                executor.submit {
+                executor.submit(ErrorHandlingRunnable {
                     processSegment(segmentData, session)
-                }
+                })
             }
         }
     }
@@ -205,5 +205,15 @@ class AudioStreamHandler(private val transcribeAudio: TranscribeAudio) : BinaryW
             sum += sample * sample
         }
         return sqrt(sum / samples.size)
+    }
+
+    class ErrorHandlingRunnable(private val task: () -> Unit) : Runnable {
+        override fun run() {
+            try {
+                task()
+            } catch (throwable: Throwable) {
+                log.error { "Error occurred in executor service: $throwable" }
+            }
+        }
     }
 }
