@@ -1,0 +1,5 @@
+spring:
+  application:
+    name: AI Bible Quotation App
+server:
+  port: 22222
