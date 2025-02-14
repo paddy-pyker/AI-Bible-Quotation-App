@@ -8,27 +8,20 @@
 </head>
 <body>
 
-<!-- FTU Screen -->
 <div class="card ftu-screen" id="ftuScreen">
-    <h1 class="app-title">verseCatch</h1>
-    <h2 class="verse-ref">Romans 8:28 (NIV)</h2>
+    <h2 class="verse-ref"></h2>
     <p class="verse-text">
-        And we know that in all things God works for the good of those who love him,
-        who have been called according to his purpose.
     </p>
     <button id="startButton" class="main-button">Start Listening</button>
 </div>
 
-<!-- Live Listening Screen (hidden by default) -->
 <div class="card live-listening-screen" id="liveListeningScreen">
-    <h1 class="app-title">verseCatch</h1>
-    <!-- This heading + paragraph will be replaced by transcribed text -->
-    <h2 class="verse-ref" id="transcribedReference">Romans 8:28 (NIV)</h2>
+    <h2 class="verse-ref" id="transcribedReference"></h2>
     <p class="verse-text" id="transcribedText">
-        Transcribing and detecting references in real-time...
+        Transcribing and detecting quotations in real-time...
     </p>
 
-    <button id="stopButton" class="main-button" disabled>Stop Listening</button>
+    <button id="stopButton" class="main-button stop-button" disabled>Stop Listening</button>
 </div>
 
 <script src="script.js"></script>

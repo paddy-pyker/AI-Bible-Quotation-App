@@ -14,13 +14,13 @@ const stopButton = document.getElementById('stopButton');
 const transcribedRef = document.getElementById('transcribedReference');
 const transcribedText = document.getElementById('transcribedText');
 
-// Show the Live Listening screen, hide FTU
+
 function showLiveListeningScreen() {
     ftuScreen.style.display = 'none';
     liveListeningScreen.style.display = 'block';
 }
 
-// Show the FTU screen, hide Live Listening
+
 function showFTUScreen() {
     ftuScreen.style.display = 'block';
     liveListeningScreen.style.display = 'none';
@@ -28,28 +28,39 @@ function showFTUScreen() {
 
 // Connect WebSocket
 function connectWebSocket() {
-    // For your environment, might be wss://192.168.8.143:8443 or similar
     socket = new WebSocket(`wss://${window.location.hostname}:8443/audioStream`);
 
     socket.onopen = () => {
         console.log('WebSocket connection established');
     };
 
-    // When the server sends a transcript, replace the placeholder text
     socket.onmessage = (event) => {
         console.log('Received transcription:', event.data);
-        // Replace the placeholder with the actual text
-        // If you only have a single line of text, you can put it all in transcribedText
-        transcribedRef.textContent = 'Detected Verse';
-        transcribedText.textContent = event.data;
+
+        const parsedData = JSON.parse(event.data);
+
+        // Extract the title and message
+        const title = parsedData.title;
+        const message = parsedData.message;
+
+        // Update the DOM elements
+        transcribedRef.textContent = title;
+        transcribedText.textContent = message;
     };
+
 
     socket.onclose = () => {
         console.log('WebSocket connection closed');
+        showFTUScreen();
+        startButton.disabled = false;
+        stopButton.disabled = true;
     };
 
     socket.onerror = (error) => {
         console.error('WebSocket error:', error);
+        showFTUScreen();
+        startButton.disabled = false;
+        stopButton.disabled = true;
     };
 }
 
@@ -74,10 +85,8 @@ startButton.addEventListener('click', () => {
             mediaStreamSource.connect(processor);
             processor.connect(audioContext.destination);
 
-            // Switch screens
             showLiveListeningScreen();
 
-            // Update button states
             startButton.disabled = true;
             stopButton.disabled = false;
         })
@@ -101,7 +110,6 @@ stopButton.addEventListener('click', () => {
         audioContext.close();
     }
 
-    // Return to FTU screen
     showFTUScreen();
 
     // Reset button states
