@@ -11,7 +11,7 @@ const stopButton = document.getElementById('stopButton');
 
 // WebSocket connection
 function connectWebSocket() {
-    socket = new WebSocket('ws://localhost:22222/audioStream');
+    socket = new WebSocket(`wss://${window.location.hostname}:8443/audioStream`);
 
     socket.onopen = () => {
         console.log('WebSocket connection established');

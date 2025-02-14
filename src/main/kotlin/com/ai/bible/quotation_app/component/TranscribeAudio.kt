@@ -73,9 +73,11 @@ class TranscribeAudio {
     }
 
     private fun createOfflineRecognizer(): OfflineRecognizer {
-        val encoder = "src/main/resources/models/tiny.en-encoder.onnx"
-        val decoder = "src/main/resources/models/tiny.en-decoder.onnx"
-        val tokens = "src/main/resources/models/tiny.en-tokens.txt"
+        val basePath = "src/main/resources/models"
+
+        val encoder = "$basePath/tiny.en-encoder.onnx"
+        val decoder = "$basePath/tiny.en-decoder.onnx"
+        val tokens = "$basePath/tiny.en-tokens.txt"
 
         val whisper = OfflineWhisperModelConfig.builder()
             .setEncoder(encoder)

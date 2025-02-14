@@ -2,4 +2,7 @@ spring:
   application:
     name: AI Bible Quotation App
 server:
-  port: 22222
+  port: 8443
+  ssl:
+    key-store: classpath:certificate/ai.bible.quotation.p12
+    key-store-password: D00FDOOF

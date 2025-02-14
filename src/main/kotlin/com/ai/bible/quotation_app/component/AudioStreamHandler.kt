@@ -42,12 +42,16 @@ class AudioStreamHandler(private val transcribeAudio: TranscribeAudio) : BinaryW
     private val silenceDurationThreshold = 800L  // e.g., 0.8 second
 
     // Executor to process completed segments asynchronously.
-    private val processingExecutor = Executors.newCachedThreadPool()
+    @Volatile
+    private var processingExecutor = Executors.newScheduledThreadPool(1)
 
 
 
     override fun afterConnectionEstablished(session: WebSocketSession) {
         log.info { "WebSocket connection established" }
+        if (processingExecutor.isShutdown || processingExecutor.isTerminated) {
+            processingExecutor = Executors.newScheduledThreadPool(1)
+        }
     }
 
     override fun afterConnectionClosed(session: WebSocketSession, status: CloseStatus) {
@@ -107,8 +111,10 @@ class AudioStreamHandler(private val transcribeAudio: TranscribeAudio) : BinaryW
             }
 
             // Process the segment asynchronously.
-            processingExecutor.submit {
-                processSegment(segmentData)
+            if (!processingExecutor.isShutdown) {
+                processingExecutor.submit {
+                    processSegment(segmentData)
+                }
             }
         }
     }
