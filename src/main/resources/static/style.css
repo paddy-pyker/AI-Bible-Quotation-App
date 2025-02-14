@@ -1,49 +1,95 @@
-/* style.css */
-
-body {
-    font-family: Arial, sans-serif;
-    background-color: #f4f4f4;
+/* RESET */
+* {
     margin: 0;
     padding: 0;
+    box-sizing: border-box;
+}
+
+/* PAGE BACKGROUND */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #1f1f1f; /* Dark background from your mockup */
     display: flex;
     justify-content: center;
     align-items: center;
     height: 100vh;
 }
 
-.container {
+/* CARD STYLES */
+.card {
+    background-color: #ffffff;
+    width: 90%;
+    max-width: 400px;
+    border-radius: 12px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+    padding: 30px 20px;
     text-align: center;
-    background-color: white;
-    border-radius: 8px;
-    padding: 20px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    display: none; /* Hide by default; we'll show the active screen via JS */
 }
 
-h1 {
+/* HEADINGS */
+.app-title {
+    font-size: 1.5rem;
+    margin-bottom: 20px;
     color: #333;
 }
 
-p {
-    color: #666;
+.verse-ref {
+    font-size: 1.1rem;
+    margin-bottom: 10px;
+    color: #444;
 }
 
-button {
-    margin: 10px;
-    padding: 10px 20px;
-    font-size: 16px;
+.verse-text {
+    font-size: 0.95rem;
+    color: #555;
+    line-height: 1.4;
+    margin: 0 auto 25px auto;
+    max-width: 300px;
+}
+
+/* BUTTON */
+.main-button {
+    width: 80%;
+    max-width: 300px;
+    padding: 14px 20px;
+    font-size: 1rem;
     border: none;
+    border-radius: 50px; /* Rounded button like the mockups */
     cursor: pointer;
-    border-radius: 5px;
     background-color: #4CAF50;
-    color: white;
+    color: #fff;
     transition: background-color 0.3s ease;
+    margin: 0 auto;
+    display: block;
 }
 
-button:hover {
+.main-button:hover {
     background-color: #45a049;
 }
 
-button:disabled {
+.main-button:disabled {
     background-color: #ccc;
     cursor: not-allowed;
+}
+
+/* MAKE THE FIRST SCREEN VISIBLE INITIALLY */
+.ftu-screen {
+    display: block; /* FTU screen is shown by default */
+}
+
+/* RESPONSIVE DESIGN FOR BIGGER SCREENS */
+@media (min-width: 768px) {
+    .card {
+        max-width: 500px;
+    }
+    .app-title {
+        font-size: 2rem;
+    }
+    .verse-ref {
+        font-size: 1.3rem;
+    }
+    .verse-text {
+        font-size: 1rem;
+    }
 }

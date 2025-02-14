@@ -1,11 +1,14 @@
 package com.ai.bible.quotation_app.component
 
+import com.ai.bible.quotation_app.model.LLMResponse
 import com.k2fsa.sherpa.onnx.OfflineModelConfig
 import com.k2fsa.sherpa.onnx.OfflineRecognizer
 import com.k2fsa.sherpa.onnx.OfflineRecognizerConfig
 import com.k2fsa.sherpa.onnx.OfflineWhisperModelConfig
 import io.github.oshai.kotlinlogging.KotlinLogging
 import org.springframework.stereotype.Component
+import org.springframework.web.socket.TextMessage
+import org.springframework.web.socket.WebSocketSession
 import java.io.ByteArrayOutputStream
 import javax.sound.sampled.AudioFormat
 import javax.sound.sampled.AudioInputStream
@@ -14,20 +17,31 @@ import javax.sound.sampled.AudioSystem
 private val log = KotlinLogging.logger {}
 
 @Component
-class TranscribeAudio {
+class TranscribeAudio(private val gemini: Gemini) {
 
     private val recognizer: OfflineRecognizer = createOfflineRecognizer()
     private val sampleRate = 16_000
 
 
-    fun transcribe(targetFormat: AudioFormat, audioInputStream: AudioInputStream) {
+    fun transcribe(session: WebSocketSession, targetFormat: AudioFormat, audioInputStream: AudioInputStream) {
         val convertedAudioStream = AudioSystem.getAudioInputStream(targetFormat, audioInputStream)
         val stream = recognizer.createStream()
         stream.acceptWaveform(audioInputStreamToFloatArray(convertedAudioStream), sampleRate)
         recognizer.decode(stream)
         val text = recognizer.getResult(stream).text
-        log.info { text }
+        log.info { "[${session.id}] $text" }
         stream.release()
+
+        session.sendMessage(TextMessage(parseText(text, session)))
+
+    }
+
+    private fun parseText(text: String, session: WebSocketSession): String {
+        val geminiResponse = gemini.chat(session.id, text)
+        if(geminiResponse != null && !geminiResponse.match){
+            return ""
+        }
+        return geminiResponse?.title as String
     }
 
     private fun audioInputStreamToFloatArray(audioInputStream: AudioInputStream): FloatArray {

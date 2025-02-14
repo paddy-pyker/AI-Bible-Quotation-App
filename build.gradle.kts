@@ -10,6 +10,7 @@ version = "0.0.1-SNAPSHOT"
 
 val dspVersion = "2.5"
 val loggerVersion = "5.1.4"
+val langchain4jVersion = "1.0.0-beta1"
 
 java {
     toolchain {
@@ -36,8 +37,11 @@ dependencies {
     implementation("be.tarsos.dsp:jvm:$dspVersion")
     implementation("io.github.oshai:kotlin-logging-jvm:$loggerVersion")
     implementation(":sherpa-onnx-v1.10.44-java21")
+    implementation("dev.langchain4j:langchain4j-google-ai-gemini-spring-boot-starter:$langchain4jVersion")
+    implementation("dev.langchain4j:langchain4j-spring-boot-starter:$langchain4jVersion")
 
     implementation("org.jetbrains.kotlin:kotlin-reflect")
+    implementation("org.springframework.boot:spring-boot-starter-data-mongodb")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")

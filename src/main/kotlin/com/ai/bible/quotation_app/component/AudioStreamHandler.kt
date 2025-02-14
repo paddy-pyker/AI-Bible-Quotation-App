@@ -116,7 +116,7 @@ class AudioStreamHandler(private val transcribeAudio: TranscribeAudio) : BinaryW
             val executor = sessionExecutors[session]
             if (executor != null && !executor.isShutdown) {
                 executor.submit {
-                    processSegment(segmentData)
+                    processSegment(segmentData, session)
                 }
             }
         }
@@ -130,7 +130,7 @@ class AudioStreamHandler(private val transcribeAudio: TranscribeAudio) : BinaryW
      *   2. Wraps the PCM data into an AudioInputStream.
      *   3. Uses Java Sound to resample the audio from 44.1 kHz to 16 kHz.
      */
-    fun processSegment(segmentData: ByteArray) {
+    fun processSegment(segmentData: ByteArray, session: WebSocketSession) {
         // Wrap the raw data in a ByteBuffer.
         val byteBuffer = ByteBuffer.wrap(segmentData).order(ByteOrder.LITTLE_ENDIAN)
         val numFloats = byteBuffer.remaining() / 4
@@ -193,7 +193,7 @@ class AudioStreamHandler(private val transcribeAudio: TranscribeAudio) : BinaryW
             false      // little-endian
         )
 
-        transcribeAudio.transcribe(targetFormat, audioInputStream)
+        transcribeAudio.transcribe(session, targetFormat, audioInputStream)
     }
 
     /**
