@@ -9,7 +9,10 @@ services:
       - .:/app
       - gradle-cache:/root/.gradle
     command: |
-      bash -c "./gradlew build --build-cache --no-daemon -x test && \
+      bash -c "curl -s https://packagecloud.io/install/repositories/github/git-lfs/script.deb.sh | sudo bash && \
+               sudo apt-get install git-lfs && \
+               git lfs pull && \
+               ./gradlew build --build-cache --no-daemon -x test && \
                chown -R '1000:1000' build && chown -R '1000:1000' lib &&\
                java -Djava.library.path=./lib -jar build/libs/*SNAPSHOT.jar"
     ports:
