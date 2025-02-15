@@ -1,6 +1,5 @@
 package com.ai.bible.quotation_app.component
 
-import com.ai.bible.quotation_app.model.Scripture
 import com.ai.bible.quotation_app.service.BibleService
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.k2fsa.sherpa.onnx.OfflineModelConfig
@@ -111,7 +110,6 @@ class TranscribeAudio(private val gemini: Gemini, private val bibleService: Bibl
         val modelConfig = OfflineModelConfig.builder()
             .setWhisper(whisper)
             .setTokens(tokens)
-            .setNumThreads(Runtime.getRuntime().availableProcessors())
             .setDebug(false)
             .build()
 
