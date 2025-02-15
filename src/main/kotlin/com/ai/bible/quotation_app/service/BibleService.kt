@@ -2,12 +2,10 @@ package com.ai.bible.quotation_app.service
 
 import com.ai.bible.quotation_app.model.LLMResponse
 import com.ai.bible.quotation_app.model.Scripture
+import com.ai.bible.quotation_app.model.Verse
 import com.ai.bible.quotation_app.utils.Utils
 import org.springframework.data.mongodb.core.MongoTemplate
-import org.springframework.data.mongodb.core.query.Criteria
-import org.springframework.data.mongodb.core.query.Query
 import org.springframework.stereotype.Service
-import com.ai.bible.quotation_app.model.Verse
 
 @Service
 class BibleService(private val mongoTemplate: MongoTemplate) {
@@ -26,9 +24,7 @@ class BibleService(private val mongoTemplate: MongoTemplate) {
 
         val hash = Utils.generateHash(book, chapter.toString(), verse.toString())
         val collectionName = versionToCollectionMap[version] ?: "niv_verses"
-        val query = Query(Criteria.where("hash").`is`(hash))
-        val result =  mongoTemplate.findOne(query, Verse::class.java, collectionName) as Verse
-
+        val result =  mongoTemplate.findById(hash, Verse::class.java, collectionName) as Verse
 
         return Scripture(message = result.content)
     }
