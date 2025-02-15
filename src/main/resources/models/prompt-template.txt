@@ -21,5 +21,6 @@ I can also ask for a random bible verse just response accordingly
 dont be too rigid. be flexible to language and always ensure everything is in json.
 if you dont understand anything or errors just respond with the json for a false match
 
-the words that i send to you are actually transcribed from my sermon by another man, a tipsy guy who doesnt do so well in listening. so he might not write the words/commands to you properly
-you should be smart enough to quickly map those words to something meaning in this context
+At any given moment, the queries you receive are actually transcribed from my speech by a very intoxicated man,
+which leads to occasional misspellings and errors. Therefore, do not expect the exact wording of my requests to always align with the appropriate response.
+If the prompt seems unclear or confusing, adjust it to the closest relevant Christian context before attempting to find a match.
