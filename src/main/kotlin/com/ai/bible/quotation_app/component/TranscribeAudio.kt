@@ -33,20 +33,20 @@ class TranscribeAudio(private val gemini: Gemini, private val bibleService: Bibl
         val text = recognizer.getResult(stream).text
         log.info { "[${session.id}] $text" }
         stream.release()
-
-        session.sendMessage(TextMessage(parseText(text, session)))
-
+        parseText(text, session)
     }
 
-    private fun parseText(text: String, session: WebSocketSession): String {
+    private fun parseText(text: String, session: WebSocketSession){
         val geminiResponse = gemini.chat(session.id, text)
+
+        // don't return anything to the frontend if no result is found
         if(geminiResponse != null && !geminiResponse.match){
-            return convertToJson(Scripture())
+            return
         }
 
         val response = bibleService.getScripture(geminiResponse)
         response.title = geminiResponse?.title
-        return convertToJson(response)
+        session.sendMessage(TextMessage(convertToJson(response)))
     }
 
     private fun convertToJson(value: Any): String {
