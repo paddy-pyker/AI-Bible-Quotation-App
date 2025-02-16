@@ -3,7 +3,7 @@ spring:
     name: AI Bible Quotation App
   data:
     mongodb:
-          uri: mongodb://${MONGODB_USER}:${MONGODB_PASS}@${MONGODB_HOST}:${MONGODB_PORT}/${MONGODB_NAME}?authSource=${MONGODB_AUTH}
+          uri: mongodb://${MONGODB_USER}:${MONGODB_PASS}@${MONGODB_HOST}:${MONGODB_PORT}/${MONGODB_NAME}?authSource=${MONGODB_AUTH}&replicaSet=rs0
 
 server:
   port: ${APP_PORT}

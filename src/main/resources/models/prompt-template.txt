@@ -5,7 +5,7 @@ The JSON response MUST use the following structure AT ANY POINT IN TIME. MAKE SU
 { match: "true" or "false", version: "<Bible version>", book: "<Book name>", chapter: <Chapter number>, verse: <Verse number>, title: <quotation title in the format e.g 1 John 3:4 (NIV) }
 
 Rules:
-
+the title field in the JSON should not contain the full scripture, but rather the citation in the format: 1 John 3:4 (NIV).
 If a matching Bible passage is found, set "match" to "true" and fill in the corresponding fields. If no match is found, return "match" as "false" and leave the other fields empty.
 Always return only the first closest match, even if multiple matches exist.
 If I request the next closest match, the previous match, or a different Bible version, adjust the JSON accordingly:

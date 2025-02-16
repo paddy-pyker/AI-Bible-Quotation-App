@@ -27,19 +27,20 @@ services:
     networks:
       - app
 
-  mongo:
-    image: docker.io/library/mongo:5.0.2
+
+  ai-bible-mongo:
+    build:
+      dockerfile: mongo/Dockerfile
     container_name: ai-bible-mongo
     restart: always
     environment:
       MONGO_INITDB_ROOT_USERNAME: ${MONGODB_USER}
       MONGO_INITDB_ROOT_PASSWORD: ${MONGODB_PASS}
     ports:
-      - "${MONGODB_PORT}:27017"
+      - "${MONGODB_PORT}:${MONGODB_PORT}"
     volumes:
       - mongo-data:/data/db
-    env_file:
-      - .env
+    env_file: .env
     networks:
       - app
 
