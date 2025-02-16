@@ -25,7 +25,7 @@ class LLMConfig {
             }
 
             override fun onResponse(responseContext: ChatModelResponseContext) {
-                log.info { "onResponse(): ${responseContext.chatRequest()}" }
+                log.info { "onResponse(): ${responseContext.chatResponse()}" }
             }
 
             override fun onError(errorContext: ChatModelErrorContext) {
