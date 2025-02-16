@@ -40,7 +40,7 @@ class SeedDB(
         log.info { "About to load $s into the database" }
         //transforming data first
         val mapper = ObjectMapper()
-        val inputStream = object {}.javaClass.getResourceAsStream("/bibleTranslations/$s" + "_bible.json")
+        val inputStream = object {}.javaClass.getResourceAsStream("/bibleTranslations/${s}_bible.json")
         val data = mapper.readValue(inputStream, object : TypeReference<Map<String, Any>>() {})
 
         return data?.entries?.flatMap { (bookName, chapters) ->
